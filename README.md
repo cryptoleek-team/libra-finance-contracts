@@ -1,4 +1,25 @@
 # Libra Finance Contracts
+The contracts are compiled with [Hardhat](https://hardhat.org/getting-started/), and tested using [Waffle](https://hardhat.org/guides/waffle-testing.html#testing-with-ethers-js-waffle) and [TypeScript](https://hardhat.org/guides/typescript.html#typescript-support).
+
+## Installation
+
+```bash
+$ npm i
+```
+
+## Usage
+
+### Build
+
+```bash
+$ npm run build
+```
+
+### Test
+
+```bash
+$ npm test
+```
 
 ### Risk
 Providing liquidity to Libra Finance is risky. Before using the protocol, we highly recommend reading the code and understanding the risks involved with being a Liquidity Provider (LP) and/or using the AMM to trade pegged value crypto assets.
