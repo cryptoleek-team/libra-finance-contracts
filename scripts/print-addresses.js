@@ -12,9 +12,9 @@ const ALLOWED_ARGS = [
 ]
 
 // Filters
-function saddleFilesFilter(file) {
+function libraFilesFilter(file) {
   const name = file.toLowerCase()
-  return name.includes("saddle") || name.includes("sdl") || true
+  return name.includes("libra") || name.includes("sdl") || true
 }
 function onlyPoolsFilter(file) {
   const name = file.toLowerCase()
@@ -43,7 +43,7 @@ function parseArgs() {
 }
 
 /**
- * @notice Prints all Saddle contract addresses parsed from the deployments directory
+ * @notice Prints all libra contract addresses parsed from the deployments directory
  * Allows filtering and basic reformatting. Use --help for more infor
  */
 function main() {
@@ -52,7 +52,7 @@ function main() {
   // Display help text and exit
   if (args["--help"]) {
     console.log(
-      `Usage: node printSaddleAddrs.js [--network=<network>] [--only-addresses] [--only-pools] [--json] [--help]`,
+      `Usage: node printlibraAddrs.js [--network=<network>] [--only-addresses] [--only-pools] [--json] [--help]`,
     )
     return
   }
@@ -74,7 +74,7 @@ function main() {
   let longestName = 0
   files
     .filter((file) => file.endsWith(".json"))
-    .filter(saddleFilesFilter)
+    .filter(libraFilesFilter)
     .filter(args["--only-pools"] ? onlyPoolsFilter : () => true)
     .forEach((file) => {
       const json = require(`../deployments/${network}/${file}`)

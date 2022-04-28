@@ -10,8 +10,8 @@ import "../libraries/SignedSafeMath.sol";
 import "../interfaces/IRewarder.sol";
 import "../interfaces/IMasterChef.sol";
 
-/// @notice The (older) MasterChef contract gives out a constant number of SADDLE tokens per block.
-/// It is the only address with minting rights for SADDLE.
+/// @notice The (older) MasterChef contract gives out a constant number of libra tokens per block.
+/// It is the only address with minting rights for libra.
 /// The idea for this MasterChef V2 (MCV2) contract is therefore to be the owner of a dummy token
 /// that is deposited into the MasterChef V1 (MCV1) contract.
 /// The allocation point for this pool on MCV1 is the total allocation point for all pools that receive double incentives.
@@ -23,7 +23,7 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
 
     /// @notice Info of each MCV2 user.
     /// `amount` LP token amount the user has provided.
-    /// `rewardDebt` The amount of SADDLE entitled to the user.
+    /// `rewardDebt` The amount of libra entitled to the user.
     struct UserInfo {
         uint256 amount;
         int256 rewardDebt;
@@ -31,15 +31,15 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
 
     /// @notice Info of each MCV2 pool.
     /// `allocPoint` The amount of allocation points assigned to the pool.
-    /// Also known as the amount of SADDLE to distribute per block.
+    /// Also known as the amount of libra to distribute per block.
     struct PoolInfo {
-        uint128 accSaddlePerShare;
+        uint128 acclibraPerShare;
         uint64 lastRewardTime;
         uint64 allocPoint;
     }
 
-    /// @notice Address of SADDLE contract.
-    IERC20 public immutable SADDLE;
+    /// @notice Address of libra contract.
+    IERC20 public immutable libra;
 
     /// @notice Info of each MCV2 pool.
     PoolInfo[] public poolInfo;
@@ -53,8 +53,8 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
     /// @dev Total allocation points. Must be the sum of all allocation points in all pools.
     uint256 public totalAllocPoint;
 
-    uint256 public saddlePerSecond;
-    uint256 private constant ACC_SADDLE_PRECISION = 1e12;
+    uint256 public libraPerSecond;
+    uint256 private constant ACC_libra_PRECISION = 1e12;
 
     event Deposit(
         address indexed user,
@@ -91,13 +91,13 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
         uint256 indexed pid,
         uint64 lastRewardTime,
         uint256 lpSupply,
-        uint256 accSaddlePerShare
+        uint256 acclibraPerShare
     );
-    event LogSaddlePerSecond(uint256 saddlePerSecond);
+    event LoglibraPerSecond(uint256 libraPerSecond);
 
-    /// @param _saddle The SADDLE token contract address.
-    constructor(IERC20 _saddle) public {
-        SADDLE = _saddle;
+    /// @param _libra The libra token contract address.
+    constructor(IERC20 _libra) public {
+        libra = _libra;
     }
 
     /// @notice Returns the number of MCV2 pools.
@@ -123,7 +123,7 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
             PoolInfo({
                 allocPoint: allocPoint.to64(),
                 lastRewardTime: block.timestamp.to64(),
-                accSaddlePerShare: 0
+                acclibraPerShare: 0
             })
         );
         emit LogPoolAddition(
@@ -134,7 +134,7 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
         );
     }
 
-    /// @notice Update the given pool's SADDLE allocation point and `IRewarder` contract. Can only be called by the owner.
+    /// @notice Update the given pool's libra allocation point and `IRewarder` contract. Can only be called by the owner.
     /// @param _pid The index of the pool. See `poolInfo`.
     /// @param _allocPoint New AP of the pool.
     /// @param _rewarder Address of the rewarder delegate.
@@ -160,37 +160,37 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
         );
     }
 
-    /// @notice Sets the saddle per second to be distributed. Can only be called by the owner.
-    /// @param _saddlePerSecond The amount of Saddle to be distributed per second.
-    function setSaddlePerSecond(uint256 _saddlePerSecond) public onlyOwner {
-        saddlePerSecond = _saddlePerSecond;
-        emit LogSaddlePerSecond(_saddlePerSecond);
+    /// @notice Sets the libra per second to be distributed. Can only be called by the owner.
+    /// @param _libraPerSecond The amount of libra to be distributed per second.
+    function setLibraPerSecond(uint256 _libraPerSecond) public onlyOwner {
+        libraPerSecond = _libraPerSecond;
+        emit LoglibraPerSecond(_libraPerSecond);
     }
 
-    /// @notice View function to see pending SADDLE on frontend.
+    /// @notice View function to see pending libra on frontend.
     /// @param _pid The index of the pool. See `poolInfo`.
     /// @param _user Address of user.
-    /// @return pending SADDLE reward for a given user.
-    function pendingSaddle(uint256 _pid, address _user)
+    /// @return pending libra reward for a given user.
+    function pendinglibra(uint256 _pid, address _user)
         external
         view
         returns (uint256 pending)
     {
         PoolInfo memory pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
-        uint256 accSaddlePerShare = pool.accSaddlePerShare;
+        uint256 acclibraPerShare = pool.acclibraPerShare;
         uint256 lpSupply = lpToken[_pid].balanceOf(address(this));
         if (block.timestamp > pool.lastRewardTime && lpSupply != 0) {
             uint256 time = block.timestamp.sub(pool.lastRewardTime);
-            uint256 saddleReward = time.mul(saddlePerSecond).mul(
+            uint256 libraReward = time.mul(libraPerSecond).mul(
                 pool.allocPoint
             ) / totalAllocPoint;
-            accSaddlePerShare = accSaddlePerShare.add(
-                saddleReward.mul(ACC_SADDLE_PRECISION) / lpSupply
+            acclibraPerShare = acclibraPerShare.add(
+                libraReward.mul(ACC_libra_PRECISION) / lpSupply
             );
         }
         pending = int256(
-            user.amount.mul(accSaddlePerShare) / ACC_SADDLE_PRECISION
+            user.amount.mul(acclibraPerShare) / ACC_libra_PRECISION
         ).sub(user.rewardDebt).toUInt256();
     }
 
@@ -212,11 +212,11 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
             uint256 lpSupply = lpToken[pid].balanceOf(address(this));
             if (lpSupply > 0) {
                 uint256 time = block.timestamp.sub(pool.lastRewardTime);
-                uint256 saddleReward = time.mul(saddlePerSecond).mul(
+                uint256 libraReward = time.mul(libraPerSecond).mul(
                     pool.allocPoint
                 ) / totalAllocPoint;
-                pool.accSaddlePerShare = pool.accSaddlePerShare.add(
-                    (saddleReward.mul(ACC_SADDLE_PRECISION) / lpSupply).to128()
+                pool.acclibraPerShare = pool.acclibraPerShare.add(
+                    (libraReward.mul(ACC_libra_PRECISION) / lpSupply).to128()
                 );
             }
             pool.lastRewardTime = block.timestamp.to64();
@@ -225,12 +225,12 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
                 pid,
                 pool.lastRewardTime,
                 lpSupply,
-                pool.accSaddlePerShare
+                pool.acclibraPerShare
             );
         }
     }
 
-    /// @notice Deposit LP tokens to MCV2 for SADDLE allocation.
+    /// @notice Deposit LP tokens to MCV2 for libra allocation.
     /// @param pid The index of the pool. See `poolInfo`.
     /// @param amount LP token amount to deposit.
     /// @param to The receiver of `amount` deposit benefit.
@@ -245,13 +245,13 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
         // Effects
         user.amount = user.amount.add(amount);
         user.rewardDebt = user.rewardDebt.add(
-            int256(amount.mul(pool.accSaddlePerShare) / ACC_SADDLE_PRECISION)
+            int256(amount.mul(pool.acclibraPerShare) / ACC_libra_PRECISION)
         );
 
         // Interactions
         IRewarder _rewarder = rewarder[pid];
         if (address(_rewarder) != address(0)) {
-            _rewarder.onSaddleReward(pid, to, to, 0, user.amount);
+            _rewarder.onlibraReward(pid, to, to, 0, user.amount);
         }
 
         lpToken[pid].safeTransferFrom(msg.sender, address(this), amount);
@@ -273,14 +273,14 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
 
         // Effects
         user.rewardDebt = user.rewardDebt.sub(
-            int256(amount.mul(pool.accSaddlePerShare) / ACC_SADDLE_PRECISION)
+            int256(amount.mul(pool.acclibraPerShare) / ACC_libra_PRECISION)
         );
         user.amount = user.amount.sub(amount);
 
         // Interactions
         IRewarder _rewarder = rewarder[pid];
         if (address(_rewarder) != address(0)) {
-            _rewarder.onSaddleReward(pid, msg.sender, to, 0, user.amount);
+            _rewarder.onlibraReward(pid, msg.sender, to, 0, user.amount);
         }
 
         lpToken[pid].safeTransfer(to, amount);
@@ -290,43 +290,43 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
 
     /// @notice Harvest proceeds for transaction sender to `to`.
     /// @param pid The index of the pool. See `poolInfo`.
-    /// @param to Receiver of SADDLE rewards.
+    /// @param to Receiver of libra rewards.
     function harvest(uint256 pid, address to) public {
         PoolInfo memory pool = updatePool(pid);
         UserInfo storage user = userInfo[pid][msg.sender];
-        int256 accumulatedSaddle = int256(
-            user.amount.mul(pool.accSaddlePerShare) / ACC_SADDLE_PRECISION
+        int256 accumulatedlibra = int256(
+            user.amount.mul(pool.acclibraPerShare) / ACC_libra_PRECISION
         );
-        uint256 _pendingSaddle = accumulatedSaddle
+        uint256 _pendinglibra = accumulatedlibra
             .sub(user.rewardDebt)
             .toUInt256();
 
         // Effects
-        user.rewardDebt = accumulatedSaddle;
+        user.rewardDebt = accumulatedlibra;
 
         // Interactions
-        if (_pendingSaddle != 0) {
-            SADDLE.safeTransfer(to, _pendingSaddle);
+        if (_pendinglibra != 0) {
+            libra.safeTransfer(to, _pendinglibra);
         }
 
         IRewarder _rewarder = rewarder[pid];
         if (address(_rewarder) != address(0)) {
-            _rewarder.onSaddleReward(
+            _rewarder.onlibraReward(
                 pid,
                 msg.sender,
                 to,
-                _pendingSaddle,
+                _pendinglibra,
                 user.amount
             );
         }
 
-        emit Harvest(msg.sender, pid, _pendingSaddle);
+        emit Harvest(msg.sender, pid, _pendinglibra);
     }
 
     /// @notice Withdraw LP tokens from MCV2 and harvest proceeds for transaction sender to `to`.
     /// @param pid The index of the pool. See `poolInfo`.
     /// @param amount LP token amount to withdraw.
-    /// @param to Receiver of the LP tokens and SADDLE rewards.
+    /// @param to Receiver of the LP tokens and libra rewards.
     function withdrawAndHarvest(
         uint256 pid,
         uint256 amount,
@@ -334,29 +334,29 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
     ) public {
         PoolInfo memory pool = updatePool(pid);
         UserInfo storage user = userInfo[pid][msg.sender];
-        int256 accumulatedSaddle = int256(
-            user.amount.mul(pool.accSaddlePerShare) / ACC_SADDLE_PRECISION
+        int256 accumulatedlibra = int256(
+            user.amount.mul(pool.acclibraPerShare) / ACC_libra_PRECISION
         );
-        uint256 _pendingSaddle = accumulatedSaddle
+        uint256 _pendinglibra = accumulatedlibra
             .sub(user.rewardDebt)
             .toUInt256();
 
         // Effects
-        user.rewardDebt = accumulatedSaddle.sub(
-            int256(amount.mul(pool.accSaddlePerShare) / ACC_SADDLE_PRECISION)
+        user.rewardDebt = accumulatedlibra.sub(
+            int256(amount.mul(pool.acclibraPerShare) / ACC_libra_PRECISION)
         );
         user.amount = user.amount.sub(amount);
 
         // Interactions
-        SADDLE.safeTransfer(to, _pendingSaddle);
+        libra.safeTransfer(to, _pendinglibra);
 
         IRewarder _rewarder = rewarder[pid];
         if (address(_rewarder) != address(0)) {
-            _rewarder.onSaddleReward(
+            _rewarder.onlibraReward(
                 pid,
                 msg.sender,
                 to,
-                _pendingSaddle,
+                _pendinglibra,
                 user.amount
             );
         }
@@ -364,7 +364,7 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
         lpToken[pid].safeTransfer(to, amount);
 
         emit Withdraw(msg.sender, pid, amount, to);
-        emit Harvest(msg.sender, pid, _pendingSaddle);
+        emit Harvest(msg.sender, pid, _pendinglibra);
     }
 
     /// @notice Withdraw without caring about rewards. EMERGENCY ONLY.
@@ -378,7 +378,7 @@ contract MiniChefV2 is BoringOwnable, BoringBatchable {
 
         IRewarder _rewarder = rewarder[pid];
         if (address(_rewarder) != address(0)) {
-            _rewarder.onSaddleReward(pid, msg.sender, to, 0, 0);
+            _rewarder.onlibraReward(pid, msg.sender, to, 0, 0);
         }
 
         // Note: transfer can fail or succeed if `amount` is zero.

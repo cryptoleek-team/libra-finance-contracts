@@ -12,9 +12,9 @@ interface IMasterChef {
 
     struct PoolInfo {
         IERC20 lpToken; // Address of LP token contract.
-        uint256 allocPoint; // How many allocation points assigned to this pool. SADDLE to distribute per block.
-        uint256 lastRewardBlock; // Last block number that SADDLE distribution occurs.
-        uint256 accSaddlePerShare; // Accumulated SADDLE per share, times 1e12. See below.
+        uint256 allocPoint; // How many allocation points assigned to this pool. libra to distribute per block.
+        uint256 lastRewardBlock; // Last block number that libra distribution occurs.
+        uint256 acclibraPerShare; // Accumulated libra per share, times 1e12. See below.
     }
 
     function poolInfo(uint256 pid)

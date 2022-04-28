@@ -1,7 +1,7 @@
 {
-  "name": "saddle-contract",
+  "name": "libra-contract",
   "version": "0.0.1",
-  "description": "The smart contracts behind saddle.finance 🤠",
+  "description": "The smart contracts behind libra.finance 🤠",
   "files": [
     "dist/**/*"
   ],
@@ -85,7 +85,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/saddle-finance/saddle-contract.git"
+    "url": "git+https://github.com/libra-finance/libra-contract.git"
   },
   "keywords": [
     "cryptocurrency",

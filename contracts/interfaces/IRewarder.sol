@@ -6,17 +6,17 @@ import "@boringcrypto/boring-solidity-e06e943/contracts/libraries/BoringERC20.so
 interface IRewarder {
     using BoringERC20 for IERC20;
 
-    function onSaddleReward(
+    function onlibraReward(
         uint256 pid,
         address user,
         address recipient,
-        uint256 saddleAmount,
+        uint256 libraAmount,
         uint256 newLpAmount
     ) external;
 
     function pendingTokens(
         uint256 pid,
         address user,
-        uint256 saddleAmount
+        uint256 libraAmount
     ) external view returns (IERC20[] memory, uint256[] memory);
 }

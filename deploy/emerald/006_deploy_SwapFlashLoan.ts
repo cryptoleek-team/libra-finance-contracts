@@ -16,6 +16,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     skipIfAlreadyDeployed: true,
     waitConfirmations: 3,
   })
+
+  console.log("SwapFlashLoan Deployment...")
 }
 export default func
 func.tags = ["SwapFlashLoan"]

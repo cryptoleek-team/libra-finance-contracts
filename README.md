@@ -4,7 +4,7 @@
 Providing liquidity to Libra Finance is risky. Before using the protocol, we highly recommend reading the code and understanding the risks involved with being a Liquidity Provider (LP) and/or using the AMM to trade pegged value crypto assets.
 
 ### Audits
-The Libra smart contracts were a clone of Saddle.finance, which were audited by OpenZeppelin, Quantstamp, and Certik.
+The Libra smart contracts were a clone of libra.finance, which were audited by OpenZeppelin, Quantstamp, and Certik.
 
 Please keep in mind that security audits don’t completely eliminate risks. Do not supply assets that you cannot afford to lose to Libra as a liquidity provider.
 

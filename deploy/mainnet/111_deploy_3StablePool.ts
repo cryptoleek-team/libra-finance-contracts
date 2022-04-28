@@ -21,12 +21,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const LP_TOKEN_NAME = "Libra3Stable"
     const LP_TOKEN_SYMBOL = "3Stable"
     const INITIAL_A = 400
-    const SWAP_FEE = 10e6 // 10bps
-    const ADMIN_FEE = 1e9 // 10%
+    const SWAP_FEE = 1e7 // 10bps
+    const ADMIN_FEE = 0 // 10%
 
     await execute(
       "SwapFlashLoan",
-      { from: deployer, log: true, waitConfirmations: 3 },
+      { from: deployer, log: true },
       "initialize",
       TOKEN_ADDRESSES,
       TOKEN_DECIMALS,

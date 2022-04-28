@@ -10,7 +10,7 @@ import "../interfaces/ISwap.sol";
 /**
  * @title SynthSwapper
  * @notice Replacement of Virtual Synths in favor of gas savings. Allows swapping synths via the Synthetix protocol
- * or Saddle's pools. The `Bridge.sol` contract will deploy minimal clones of this contract upon initiating
+ * or libra's pools. The `Bridge.sol` contract will deploy minimal clones of this contract upon initiating
  * any cross-asset swaps.
  */
 contract SynthSwapper is Initializable {
@@ -21,7 +21,7 @@ contract SynthSwapper is Initializable {
     // This contract is a proxy of `Synthetix` and is used to exchange synths.
     ISynthetix public constant SYNTHETIX =
         ISynthetix(0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F);
-    // "SADDLE" in bytes32 form
+    // "libra" in bytes32 form
     bytes32 public constant TRACKING =
         0x534144444c450000000000000000000000000000000000000000000000000000;
 

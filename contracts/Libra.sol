@@ -9,7 +9,7 @@ import "./Vesting.sol";
 import "./SimpleGovernance.sol";
 
 /**
- * @title Saddle DAO token
+ * @title libra DAO token
  * @notice A token that is deployed with fixed amount and appropriate vesting contracts.
  * Transfer is blocked for a period of time until the governance can toggle the transferability.
  */
@@ -62,7 +62,7 @@ contract Libra is ERC20, SimpleGovernance {
 
     /**
      * @notice Deploys a clone of the vesting contract for the given recipient. Details about vesting and token
-     * release schedule can be found on https://docs.saddle.finance
+     * release schedule can be found on https://docs.libra.finance
      * @param recipient Recipient of the token through the vesting schedule.
      */
     function deployNewVestingContract(Recipient memory recipient)

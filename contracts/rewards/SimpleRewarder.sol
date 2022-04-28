@@ -121,7 +121,7 @@ contract SimpleRewarder is IRewarder, BoringOwnable {
      * @param to address to send the reward token to
      * @param lpTokenAmount amount of total lp tokens that the user has it staked
      */
-    function onSaddleReward(
+    function onlibraReward(
         uint256 _pid,
         address _user,
         address to,
@@ -201,7 +201,7 @@ contract SimpleRewarder is IRewarder, BoringOwnable {
 
     /**
      * @notice Updates the stored rate of emission per share since the last time this function was called.
-     * @dev This is called whenever `onSaddleReward` is called to ensure the rewards are given out with the
+     * @dev This is called whenever `onlibraReward` is called to ensure the rewards are given out with the
      * correct emission rate.
      */
     function updatePool() public returns (PoolInfo memory pool) {

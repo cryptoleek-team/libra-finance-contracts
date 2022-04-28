@@ -26,13 +26,13 @@ contract Target {
  * There are three types of supported cross-asset swaps, tokenToSynth, synthToToken, and tokenToToken.
  *
  * 1) tokenToSynth
- * Swaps a supported token in a saddle pool to any synthetic asset (e.g. tBTC -> sAAVE).
+ * Swaps a supported token in a libra pool to any synthetic asset (e.g. tBTC -> sAAVE).
  *
  * 2) synthToToken
- * Swaps any synthetic asset to a suported token in a saddle pool (e.g. sDEFI -> USDC).
+ * Swaps any synthetic asset to a suported token in a libra pool (e.g. sDEFI -> USDC).
  *
  * 3) tokenToToken
- * Swaps a supported token in a saddle pool to one in another pool (e.g. renBTC -> DAI).
+ * Swaps a supported token in a libra pool to one in another pool (e.g. renBTC -> DAI).
  *
  * Due to the settlement periods of synthetic assets, the users must wait until the trades can be completed.
  * Users will receive an ERC721 token that represents pending cross-asset swap. Once the waiting period is over,
@@ -163,7 +163,7 @@ contract Bridge is ERC721 {
      */
     constructor(address synthSwapperAddress)
         public
-        ERC721("Saddle Cross-Asset Swap", "SaddleSynthSwap")
+        ERC721("libra Cross-Asset Swap", "libraSynthSwap")
     {
         SYNTH_SWAPPER_MASTER = synthSwapperAddress;
         updateExchangerCache();
@@ -243,7 +243,7 @@ contract Bridge is ERC721 {
     }
 
     /**
-     * @notice Settles and withdraws the synthetic asset without swapping it to a token in a Saddle pool. Only the owner
+     * @notice Settles and withdraws the synthetic asset without swapping it to a token in a libra pool. Only the owner
      * of the ERC721 token of `itemId` can call this function. Reverts if the given `itemId` does not represent a
      * `synthToToken` or a `tokenToToken` swap.
      * @param itemId ID of the pending swap
@@ -466,7 +466,7 @@ contract Bridge is ERC721 {
     /**
      * @notice Calculates the expected amount of the desired synthetic asset the caller will receive after completing
      * a `TokenToSynth` swap with the given parameters. This calculation does not consider the settlement periods.
-     * @param swap the address of a Saddle pool to use to swap the given token to a bridging synth
+     * @param swap the address of a libra pool to use to swap the given token to a bridging synth
      * @param tokenFromIndex the index of the token to swap from
      * @param synthOutKey the currency key of the desired synthetic asset
      * @param tokenInAmount the amount of the token to swap form
@@ -500,7 +500,7 @@ contract Bridge is ERC721 {
     /**
      * @notice Initiates a cross-asset swap from a token supported in the `swap` pool to any synthetic asset.
      * The caller will receive an ERC721 token representing their ownership of the pending cross-asset swap.
-     * @param swap the address of a Saddle pool to use to swap the given token to a bridging synth
+     * @param swap the address of a libra pool to use to swap the given token to a bridging synth
      * @param tokenFromIndex the index of the token to swap from
      * @param synthOutKey the currency key of the desired synthetic asset
      * @param tokenInAmount the amount of the token to swap form
@@ -575,7 +575,7 @@ contract Bridge is ERC721 {
      * @notice Calculates the expected amount of the desired token the caller will receive after completing
      * a `SynthToToken` swap with the given parameters. This calculation does not consider the settlement periods or
      * any potential changes of the `swap` pool composition.
-     * @param swap the address of a Saddle pool to use to swap the given token to a bridging synth
+     * @param swap the address of a libra pool to use to swap the given token to a bridging synth
      * @param synthInKey the currency key of the synth to swap from
      * @param tokenToIndex the index of the token to swap to
      * @param synthInAmount the amount of the synth to swap form
@@ -614,7 +614,7 @@ contract Bridge is ERC721 {
     /**
      * @notice Initiates a cross-asset swap from a synthetic asset to a supported token. The caller will receive
      * an ERC721 token representing their ownership of the pending cross-asset swap.
-     * @param swap the address of a Saddle pool to use to swap the given token to a bridging synth
+     * @param swap the address of a libra pool to use to swap the given token to a bridging synth
      * @param synthInKey the currency key of the synth to swap from
      * @param tokenToIndex the index of the token to swap to
      * @param synthInAmount the amount of the synth to swap form
@@ -677,7 +677,7 @@ contract Bridge is ERC721 {
      * @notice Calculates the expected amount of the desired token the caller will receive after completing
      * a `TokenToToken` swap with the given parameters. This calculation does not consider the settlement periods or
      * any potential changes of the pool compositions.
-     * @param swaps the addresses of the two Saddle pools used to do the cross-asset swap
+     * @param swaps the addresses of the two libra pools used to do the cross-asset swap
      * @param tokenFromIndex the index of the token in the first `swaps` pool to swap from
      * @param tokenToIndex the index of the token in the second `swaps` pool to swap to
      * @param tokenFromAmount the amount of the token to swap from
@@ -717,9 +717,9 @@ contract Bridge is ERC721 {
     }
 
     /**
-     * @notice Initiates a cross-asset swap from a token in one Saddle pool to one in another. The caller will receive
+     * @notice Initiates a cross-asset swap from a token in one libra pool to one in another. The caller will receive
      * an ERC721 token representing their ownership of the pending cross-asset swap.
-     * @param swaps the addresses of the two Saddle pools used to do the cross-asset swap
+     * @param swaps the addresses of the two libra pools used to do the cross-asset swap
      * @param tokenFromIndex the index of the token in the first `swaps` pool to swap from
      * @param tokenToIndex the index of the token in the second `swaps` pool to swap to
      * @param tokenFromAmount the amount of the token to swap from

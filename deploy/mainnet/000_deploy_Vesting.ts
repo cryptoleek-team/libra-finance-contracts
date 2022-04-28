@@ -4,15 +4,13 @@ import { DeployFunction } from "hardhat-deploy/types"
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, getChainId } = hre
   const { deploy } = deployments
-  const { libraryDeployer } = await getNamedAccounts()
+  const { deployer } = await getNamedAccounts()
 
-  await deploy("AmplificationUtils", {
-    from: libraryDeployer,
+  await deploy("Vesting", {
+    from: deployer,
     log: true,
     skipIfAlreadyDeployed: true,
   })
-
-  console.log("AmplificationUtils Deployment...")
 }
 export default func
-func.tags = ["AmplificationUtils"]
+func.tags = ["Vesting"]
